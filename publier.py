@@ -55,8 +55,9 @@ def programmes() -> dict:
 def envoyer(v: dict, quand: dt.datetime | None) -> tuple[dict, list]:
     ids, erreurs = {}, []
     for service, canal in CHAINES.items():
-        meta = {"instagram": {"instagram": {"shouldShareToFeed": True, "type": "reel", "isAiGenerated": True}},
-                "tiktok": {"tiktok": {"title": v["titre"], "isAiGenerated": True}},
+        ia = bool(v.get("ia", False))           # 05/11 : étiquette IA seulement s'il y a une voix clonée
+        meta = {"instagram": {"instagram": {"shouldShareToFeed": True, "type": "reel", "isAiGenerated": ia}},
+                "tiktok": {"tiktok": {"title": v["titre"], "isAiGenerated": ia}},
                 "facebook": {"facebook": {"type": v.get("facebook", "reel")}}}[service]
         inp = {"channelId": canal, "text": v["texte"], "schedulingType": "automatic", "needsApproval": False,
                "assets": [{"video": {"url": v["url"], "metadata": {"thumbnailOffset": v["miniature_ms"]}}}],
